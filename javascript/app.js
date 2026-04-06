@@ -1,18 +1,22 @@
+// se importa prompt-sync para entrada por consola
 const prompt = require("prompt-sync")();
 
+// lista principal de alumnos
+// estructura: [nombre, [[materia, nota], ...]]
 let alumnos = [];
 
-// funcion para buscar un alumno por nombre
+// funcion para buscar alumno
 function buscarAlumno(nombre) {
   return alumnos.find((a) => a[0].toLowerCase() === nombre.toLowerCase());
 }
 
-// funcion para agregar un alumno
+// funcion para agregar alumno
 function agregarAlumno() {
   let nombre = prompt("nombre del alumno: ");
 
-  // verificar si existe
   let alumno = buscarAlumno(nombre);
+
+  // si ya existe
   if (alumno) {
     console.log("el alumno ya existe");
     modificarNotas(alumno);
@@ -21,7 +25,7 @@ function agregarAlumno() {
 
   let materias = [];
 
-  // cargar materias hasta escribir 'fin'
+  // cargar materias
   while (true) {
     let materia = prompt("materia (fin para terminar): ");
     if (materia === "fin") break;
@@ -30,7 +34,6 @@ function agregarAlumno() {
     materias.push([materia, nota]);
   }
 
-  // agregar alumno a la lista
   alumnos.push([nombre, materias]);
 }
 
@@ -38,7 +41,7 @@ function agregarAlumno() {
 function modificarNotas(alumno) {
   let materia = prompt("materia: ");
 
-  // buscar si la materia existe
+  // buscar si existe
   let m = alumno[1].find((x) => x[0].toLowerCase() === materia.toLowerCase());
 
   if (m) {
@@ -56,37 +59,10 @@ function verAlumnos() {
   alumnos.forEach((alumno) => {
     console.log("\nalumno:", alumno[0]);
 
-    let suma = 0;
-
     alumno[1].forEach((m) => {
       console.log(m[0], ":", m[1]);
-      suma += m[1];
     });
-
-    // calcular promedio
-    let promedio = suma / alumno[1].length;
-    console.log("promedio:", promedio.toFixed(2));
   });
-}
-
-// funcion para mostrar el mejor promedio
-function mejorPromedio() {
-  let mejor = null;
-  let mejorProm = 0;
-
-  alumnos.forEach((alumno) => {
-    let suma = alumno[1].reduce((acc, m) => acc + m[1], 0);
-    let promedio = suma / alumno[1].length;
-
-    if (promedio > mejorProm) {
-      mejorProm = promedio;
-      mejor = alumno[0];
-    }
-  });
-
-  if (mejor) {
-    console.log("mejor alumno:", mejor, "con promedio", mejorProm.toFixed(2));
-  }
 }
 
 // menu principal
@@ -94,8 +70,7 @@ while (true) {
   console.log("\n1. ver alumnos");
   console.log("2. agregar alumno");
   console.log("3. agregar o modificar notas");
-  console.log("4. mejor promedio");
-  console.log("5. salir");
+  console.log("4. salir");
 
   let opcion = prompt("opcion: ");
 
@@ -113,8 +88,6 @@ while (true) {
       console.log("el alumno no existe");
     }
   } else if (opcion === "4") {
-    mejorPromedio();
-  } else if (opcion === "5") {
     break;
   }
 }
